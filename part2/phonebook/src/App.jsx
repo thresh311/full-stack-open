@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const Filter = ({ nameFilter, setNameFilter }) => {
 	return (
@@ -57,14 +58,14 @@ const Person = ({ person }) => {
 };
 
 const App = () => {
-	const [people, setPeople] = useState([
-		{ name: "Arto Hellas", number: "040-123456", id: 1 },
-		{ name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-		{ name: "Dan Abramov", number: "12-43-234345", id: 3 },
-		{ name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-	]);
+	const [people, setPeople] = useState([]);
 	const [newPerson, setNewPerson] = useState({ name: "", number: "" });
 	const [nameFilter, setNameFilter] = useState("");
+	useEffect(() => {
+		axios.get("http://localhost:3001/persons").then((response) => {
+			setPeople(response.data);
+		});
+	}, []);
 	const handleOnSumbmit = (e) => {
 		e.preventDefault();
 		if (people.some((p) => p.name === newPerson.name)) {
