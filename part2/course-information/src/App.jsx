@@ -29,12 +29,13 @@ const Part = ({ part }) => {
 	);
 };
 
-const Total = (props) => {
-	let total = 0;
-	props.parts.forEach((p) => (total += p.exercises));
+const Total = ({ parts }) => {
+	const total = parts.reduce((previousTotal, currentPart) => {
+		return previousTotal + currentPart.exercises;
+	}, 0);
 	return (
 		<>
-			<p>Number of exercises {total}</p>
+			<p><b>Total of {total} exercises</b></p>
 		</>
 	);
 };
@@ -64,7 +65,6 @@ const App = () => {
 				exercises: 14,
 				id: 4,
 			},
-			,
 		],
 	};
 
