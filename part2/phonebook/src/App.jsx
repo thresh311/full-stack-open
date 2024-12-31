@@ -5,6 +5,10 @@ const App = () => {
 	const [newName, setNewName] = useState("");
 	const handleOnSumbmit = (e) => {
 		e.preventDefault();
+		if (persons.some((p) => p.name === newName)) {
+			alert(`${newName} is already added to phonebook`);
+			return;
+		}
 		setPersons(persons.concat({ name: newName }));
 		setNewName("");
 	};
