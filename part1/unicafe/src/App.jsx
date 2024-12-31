@@ -11,22 +11,25 @@ const Statistics = ({ feedback }) => {
 	}
 
 	return (
-		<>
-			<StatisticLine text="good" value={good} />
+		<table>
+      <tbody>
+      <StatisticLine text="good" value={good} />
 			<StatisticLine text="neutral" value={neutral} />
 			<StatisticLine text="bad" value={bad} />
 			<StatisticLine text="total" value={totalFeedback} />
 			<StatisticLine text="average" value={average} />
 			<StatisticLine text="positive" value={percentagePositive + "%"} />
-		</>
+      </tbody>
+		</table>
 	);
 };
 
 const StatisticLine = ({ text, value }) => {
 	return (
-		<p>
-			{text} {value}
-		</p>
+		<tr>
+      <td>{text}</td>
+			<td>{value}</td> 
+		</tr>
 	);
 };
 
