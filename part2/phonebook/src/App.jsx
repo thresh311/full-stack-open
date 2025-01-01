@@ -78,30 +78,48 @@ const App = () => {
 
 	const handleOnSumbmit = (e) => {
 		e.preventDefault();
-		if (people.some((p) => p.name === newPerson.name)) {
-			alert(`${newPerson.name} is already added to phonebook`);
-			return;
+
+		const registeredPerson = people.find((p) => p.name === newPerson.name);
+
+		if (registeredPerson) {
+			const ok = window.confirm(
+				`${newPerson.name} is already added to phonebook, replace the old number with new one?`
+			);
+			if (!ok) return;
+			peopleService
+				.update(registeredPerson.id, newPerson)
+				.then((updatedPerson) => {
+					setPeople(
+						people.map((p) => (p.id === updatedPerson.id ? updatedPerson : p))
+					);
+					setNewPerson({ name: "", number: "" });
+				})
+				.catch((err) => {
+					console.log(err);
+					alert("There was an error while updating the person in the server.");
+				});
+		} else {
+			peopleService
+				.create(newPerson)
+				.then((data) => {
+					console.log(data);
+					setPeople(people.concat(data));
+					setNewPerson({ name: "", number: "" });
+				})
+				.catch((err) => {
+					console.log(err);
+					alert(
+						"There was an error while creating the new person in the server."
+					);
+				});
 		}
-		peopleService
-			.create(newPerson)
-			.then((data) => {
-				console.log(data);
-				setPeople(people.concat(data));
-				setNewPerson({ name: "", number: "" });
-			})
-			.catch((err) => {
-				console.log(err);
-				alert(
-					"There was an error while creating the new person in the server."
-				);
-			});
 	};
 
 	const handleDelete = (personToDelete) => {
 		if (window.confirm(`Delete ${personToDelete.name} ?`)) {
-      peopleService.deletePerson(personToDelete.id).then((deletedPerson) => {
-        setPeople(people.filter((p) => p.id !== deletedPerson.id));
-      });
+			peopleService.deletePerson(personToDelete.id).then((deletedPerson) => {
+				setPeople(people.filter((p) => p.id !== deletedPerson.id));
+			});
 		}
 	};
 
